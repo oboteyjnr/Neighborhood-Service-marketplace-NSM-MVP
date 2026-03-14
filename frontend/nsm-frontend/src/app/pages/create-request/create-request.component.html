@@ -1,0 +1,42 @@
+<section class="card">
+	<h2>Create Service Request</h2>
+
+	<form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+		<label>
+			Title
+			<input type="text" formControlName="title" />
+		</label>
+
+		<label>
+			Description
+			<textarea rows="4" formControlName="description"></textarea>
+		</label>
+
+		<label>
+			Category
+			<select formControlName="categoryId">
+				<option value="">Select category</option>
+				<option *ngFor="let category of categories" [value]="category._id">{{ category.name }}</option>
+			</select>
+		</label>
+
+		<label>
+			Location
+			<input type="text" formControlName="location" />
+		</label>
+
+		<label>
+			Assign Provider
+			<select formControlName="providerId">
+				<option value="">Select provider</option>
+				<option *ngFor="let provider of providers" [value]="provider.id">
+					{{ provider.name }} ({{ provider.email }})
+				</option>
+			</select>
+		</label>
+
+		<div class="error" *ngIf="error">{{ error }}</div>
+		<div class="error" *ngIf="!error && !providers.length">No providers are registered yet.</div>
+		<button type="submit" [disabled]="loading">{{ loading ? 'Creating...' : 'Create Request' }}</button>
+	</form>
+</section>

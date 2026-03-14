@@ -1,0 +1,50 @@
+<section class="card">
+	<div class="page-header">
+		<h2>Service Requests</h2>
+		<button type="button" class="secondary-btn" (click)="logout()" [disabled]="loggingOut">
+			{{ loggingOut ? 'Logging out...' : 'Logout' }}
+		</button>
+	</div>
+
+	<form class="form-grid" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
+		<label>
+			Status
+			<select formControlName="status">
+				<option value="">All</option>
+				<option value="open">Open</option>
+				<option value="quoted">Quoted</option>
+				<option value="assigned">Assigned</option>
+				<option value="completed">Completed</option>
+				<option value="cancelled">Cancelled</option>
+			</select>
+		</label>
+
+		<label>
+			Category
+			<select formControlName="categoryId">
+				<option value="">All</option>
+				<option *ngFor="let category of categories" [value]="category._id">{{ category.name }}</option>
+			</select>
+		</label>
+
+		<label>
+			Keyword
+			<input type="text" formControlName="q" placeholder="Search title/description" />
+		</label>
+
+		<div>
+			<button type="submit">Apply Filters</button>
+			<button type="button" class="secondary-btn" (click)="clearFilters()">Clear</button>
+		</div>
+	</form>
+
+	<div class="error" *ngIf="error">{{ error }}</div>
+
+	<div *ngIf="loading">Loading requests...</div>
+
+	<div *ngFor="let request of requests" class="card row" (click)="openDetails(request._id)">
+		<h3>{{ request.title }}</h3>
+		<div>Status: {{ request.status }}</div>
+		<div>Location: {{ request.location }}</div>
+	</div>
+</section>

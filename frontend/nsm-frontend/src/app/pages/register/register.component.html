@@ -1,0 +1,31 @@
+<section class="card">
+	<h2>Register</h2>
+
+	<form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+		<label>
+			Name
+			<input type="text" formControlName="name" />
+		</label>
+
+		<label>
+			Email
+			<input type="email" formControlName="email" />
+		</label>
+
+		<label>
+			Password
+			<input type="password" formControlName="password" />
+		</label>
+
+		<label>
+			Role
+			<select formControlName="role">
+				<option value="resident">Resident</option>
+				<option value="provider">Provider</option>
+			</select>
+		</label>
+
+		<div class="error" *ngIf="error">{{ error }}</div>
+		<button type="submit" [disabled]="loading">{{ loading ? 'Creating account...' : 'Register' }}</button>
+	</form>
+</section>

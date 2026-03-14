@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "NSM-MVP Workflow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Register Resident",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Resident One\",\n  \"email\": \"resident1@example.com\",\n  \"password\": \"Password123\",\n  \"role\": \"resident\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Login Resident",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"resident1@example.com\",\n  \"password\": \"Password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Create Category",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/categories",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Home Repair\",\n  \"description\": \"General home maintenance\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('categoryId', pm.response.json().category._id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Create Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/requests",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Fix leaking sink\",\n  \"description\": \"Kitchen sink is leaking and needs urgent repair\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"location\": \"Downtown\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('requestId', pm.response.json().serviceRequest._id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Register Provider",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Provider One\",\n  \"email\": \"provider1@example.com\",\n  \"password\": \"Password123\",\n  \"role\": \"provider\"\n}"
+        }
+      }
+    },
+    {
+      "name": "6. Login Provider",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"provider1@example.com\",\n  \"password\": \"Password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "7. List Open Requests",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/requests?status=open"
+      }
+    },
+    {
+      "name": "8. Submit Quote",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/quotes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"requestId\": \"{{requestId}}\",\n  \"price\": 150,\n  \"daysToComplete\": 2,\n  \"message\": \"Can complete quickly\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('quoteId', pm.response.json().quote._id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Login Resident Again",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"resident1@example.com\",\n  \"password\": \"Password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "10. Resident View Quotes",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/quotes/request/{{requestId}}"
+      }
+    },
+    {
+      "name": "11. Accept Quote",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/quotes/{{quoteId}}/accept"
+      }
+    },
+    {
+      "name": "12. Verify Request Assigned",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/requests/{{requestId}}"
+      }
+    },
+    {
+      "name": "13. Verify Rejected Quotes",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/quotes/request/{{requestId}}"
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "categoryId", "value": "" },
+    { "key": "requestId", "value": "" },
+    { "key": "quoteId", "value": "" }
+  ]
+}

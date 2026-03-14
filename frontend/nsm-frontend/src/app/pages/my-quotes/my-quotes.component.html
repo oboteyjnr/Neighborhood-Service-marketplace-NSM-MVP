@@ -1,0 +1,21 @@
+<section class="card">
+	<div class="page-header">
+		<h2>My Assigned Quotes</h2>
+		<button type="button" class="secondary-btn" (click)="logout()" [disabled]="loggingOut">
+			{{ loggingOut ? 'Logging out...' : 'Logout' }}
+		</button>
+	</div>
+	<div class="error" *ngIf="error">{{ error }}</div>
+	<div *ngIf="loading">Loading...</div>
+	<div *ngIf="!loading && !error && !quotes.length">No assigned quotes yet.</div>
+
+	<div *ngFor="let quote of quotes" class="card">
+		<div>Request: {{ getRequestLabel(quote) }}</div>
+		<div *ngIf="isDirectAssignment(quote)">Type: Direct assignment from resident</div>
+		<div *ngIf="!isDirectAssignment(quote)">Type: Accepted quote</div>
+		<div *ngIf="!isDirectAssignment(quote)">Price: {{ quote.price }}</div>
+		<div *ngIf="!isDirectAssignment(quote)">Days: {{ quote.daysToComplete }}</div>
+		<div>Status: {{ quote.status }}</div>
+		<button type="button" (click)="openRequest(quote)">View Request</button>
+	</div>
+</section>

@@ -1,0 +1,15 @@
+.page-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.page-header h2 {
+	margin: 0;
+}
+
+.secondary-btn {
+	background: #5f7386;
+}

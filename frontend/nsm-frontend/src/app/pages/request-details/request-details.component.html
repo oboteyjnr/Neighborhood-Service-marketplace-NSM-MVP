@@ -1,0 +1,41 @@
+<section class="card" *ngIf="request as req">
+	<h2>{{ req.title }}</h2>
+	<div>Status: {{ req.status }}</div>
+	<div>Location: {{ req.location }}</div>
+	<p>{{ req.description }}</p>
+
+	<div class="error" *ngIf="error">{{ error }}</div>
+	<div class="error" *ngIf="quoteError">{{ quoteError }}</div>
+	<div *ngIf="actionMessage">{{ actionMessage }}</div>
+</section>
+
+<section class="card" *ngIf="canProviderQuote">
+	<h3>Submit Your Quote</h3>
+	<form class="form-grid" [formGroup]="quoteForm" (ngSubmit)="submitQuote()">
+		<label>
+			Price
+			<input type="number" formControlName="price" min="1" />
+		</label>
+		<label>
+			Days to Complete
+			<input type="number" formControlName="daysToComplete" min="1" max="365" />
+		</label>
+		<label>
+			Message
+			<textarea rows="3" formControlName="message"></textarea>
+		</label>
+		<button type="submit">Submit Quote</button>
+	</form>
+</section>
+
+<section class="card">
+	<h3>Quotes</h3>
+	<div *ngIf="loading">Loading...</div>
+	<div *ngFor="let quote of quotes" class="card">
+		<div>Price: {{ quote.price }}</div>
+		<div>Days: {{ quote.daysToComplete }}</div>
+		<div>Status: {{ quote.status }}</div>
+		<div>Message: {{ quote.message || '-' }}</div>
+		<button *ngIf="canResidentAccept && quote.status === 'pending'" (click)="acceptQuote(quote._id)">Accept Quote</button>
+	</div>
+</section>

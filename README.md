@@ -2,6 +2,8 @@
 
 # Project Contributors:
 # 1. OTOBONG PATRICK OBOT N01711342
+# 2. SAMAD DERE N01738005
+# 3. SAMUEL ILESANMI N01666340
 
 ## 1. Project Overview
 Neighborhood Service Marketplace is a full-stack web application where:

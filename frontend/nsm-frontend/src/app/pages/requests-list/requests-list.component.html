@@ -47,4 +47,8 @@
 		<div>Status: {{ request.status }}</div>
 		<div>Location: {{ request.location }}</div>
 	</div>
+
+	<div class="last-reviewed" *ngIf="lastVisitedTitle && lastVisitedReviewedAt">
+		Last reviewed document: <strong>{{ lastVisitedTitle }}</strong> at {{ lastVisitedReviewedAt }}
+	</div>
 </section>

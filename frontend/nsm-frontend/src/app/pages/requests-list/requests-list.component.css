@@ -18,3 +18,11 @@
 	margin-left: 0.5rem;
 	background: #5f7386;
 }
+
+.last-reviewed {
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid #d6e0ea;
+	font-size: 0.95rem;
+	color: #34495e;
+}

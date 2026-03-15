@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const ServiceRequest = require("../models/ServiceRequest");
 const Category = require("../models/Category");
-const User = require("../models/User");
 const Quote = require("../models/Quote");
 const asyncHandler = require("../utils/asyncHandler");
 const { REQUEST_STATUS, USER_ROLES } = require("../utils/constants");
@@ -15,18 +14,14 @@ const ALLOWED_TRANSITIONS = {
 };
 
 const createRequest = asyncHandler(async (req, res) => {
-  const { title, description, categoryId, location, providerId } = req.body;
+  const { title, description, categoryId, location } = req.body;
 
-  if (!title || !description || !categoryId || !location || !providerId) {
-    return res.status(400).json({ message: "title, description, categoryId, location and providerId are required" });
+  if (!title || !description || !categoryId || !location) {
+    return res.status(400).json({ message: "title, description, categoryId and location are required" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(categoryId)) {
     return res.status(400).json({ message: "Invalid categoryId" });
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(providerId)) {
-    return res.status(400).json({ message: "Invalid providerId" });
   }
 
   const category = await Category.findById(categoryId);
@@ -34,19 +29,12 @@ const createRequest = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Category not found" });
   }
 
-  const provider = await User.findById(providerId);
-  if (!provider || provider.role !== USER_ROLES.PROVIDER) {
-    return res.status(404).json({ message: "Provider not found" });
-  }
-
   const serviceRequest = await ServiceRequest.create({
     title,
     description,
     categoryId,
     location,
-    residentId: req.user.id,
-    status: REQUEST_STATUS.ASSIGNED,
-    assignedProviderId: providerId
+    residentId: req.user.id
   });
 
   return res.status(201).json({ serviceRequest });

@@ -23,13 +23,13 @@ export class MyQuotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.quoteService.getAssignedToMe().subscribe({
+    this.quoteService.getMine().subscribe({
       next: (quotes) => {
         this.quotes = quotes;
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Failed to load assigned quotes';
+        this.error = err?.error?.message || 'Failed to load quotes';
         this.loading = false;
       }
     });
@@ -42,10 +42,6 @@ export class MyQuotesComponent implements OnInit {
 
   getRequestLabel(quote: QuoteDto): string {
     return typeof quote.requestId === 'string' ? quote.requestId : quote.requestId.title;
-  }
-
-  isDirectAssignment(quote: QuoteDto): boolean {
-    return quote.assignmentSource === 'direct_assignment';
   }
 
   private getRequestId(quote: QuoteDto): string {

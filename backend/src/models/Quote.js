@@ -42,6 +42,7 @@ const quoteSchema = new mongoose.Schema(
 );
 
 quoteSchema.index({ requestId: 1 });
+quoteSchema.index({ providerId: 1 });
 quoteSchema.index({ providerId: 1, requestId: 1 }, { unique: true });
 quoteSchema.index(
   { requestId: 1, status: 1 },

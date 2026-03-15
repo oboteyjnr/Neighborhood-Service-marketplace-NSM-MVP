@@ -31,13 +31,7 @@ export class RequestService {
       .pipe(map((res) => res.requests));
   }
 
-  create(payload: {
-    title: string;
-    description: string;
-    categoryId: string;
-    location: string;
-    providerId: string;
-  }): Observable<ServiceRequestDto> {
+  create(payload: { title: string; description: string; categoryId: string; location: string }): Observable<ServiceRequestDto> {
     return this.http
       .post<{ serviceRequest: ServiceRequestDto }>(`${this.api}/requests`, payload, { withCredentials: true })
       .pipe(map((res) => res.serviceRequest));

@@ -14,6 +14,8 @@ import { RequestService } from '../../services/request.service';
   styleUrl: './request-details.component.css'
 })
 export class RequestDetailsComponent implements OnInit {
+  private static readonly LAST_VISITED_COOKIE_PREFIX = 'nsm.lastVisitedRequest.';
+
   request: ServiceRequestDto | null = null;
   quotes: QuoteDto[] = [];
   currentUser: UserDto | null = null;
@@ -41,6 +43,9 @@ export class RequestDetailsComponent implements OnInit {
     if (!this.currentUser) {
       this.authService.me().subscribe((user) => {
         this.currentUser = user;
+        if (this.request) {
+          this.storeLastVisitedRequestCookie(this.request);
+        }
       });
     }
 
@@ -114,6 +119,7 @@ export class RequestDetailsComponent implements OnInit {
     this.requestService.getById(requestId).subscribe({
       next: (request) => {
         this.request = request;
+        this.storeLastVisitedRequestCookie(request);
         this.requestService.getQuotesForRequest(requestId).subscribe({
           next: (quotes) => {
             this.quotes = quotes;
@@ -130,6 +136,24 @@ export class RequestDetailsComponent implements OnInit {
         this.error = err?.error?.message || 'Failed to load request';
       }
     });
+  }
+
+  private storeLastVisitedRequestCookie(request: ServiceRequestDto): void {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const cookieName = `${RequestDetailsComponent.LAST_VISITED_COOKIE_PREFIX}${this.currentUser.id}`;
+    const payload = {
+      requestId: request._id,
+      title: request.title,
+      visitedAt: new Date().toISOString()
+    };
+
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 30);
+
+    document.cookie = `${cookieName}=${encodeURIComponent(JSON.stringify(payload))}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
   }
 
 }
